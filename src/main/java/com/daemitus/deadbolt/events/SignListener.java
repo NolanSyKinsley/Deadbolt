@@ -5,6 +5,7 @@ import com.daemitus.deadbolt.Deadbolt;
 import com.daemitus.deadbolt.Deadbolted;
 import com.daemitus.deadbolt.Perm;
 import com.daemitus.deadbolt.listener.ListenerManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -44,7 +45,13 @@ public final class SignListener extends org.bukkit.event.block.BlockListener {
                 lines[i] = Config.createColor(lines[i]);
             }
         }
-
+        if (event.getBlock().getType().equals(Material.WALL_SIGN)) {
+            Sign s = (Sign) event.getBlock().getState();
+            if (Config.isPrivate(Config.removeColor(s.getLine(0)))) {
+                event.setCancelled(true);
+                return;
+            }
+        }
         String ident = Config.removeColor(lines[0]);
         boolean isPrivate = Config.isPrivate(ident);
         boolean isMoreUsers = Config.isMoreUsers(ident);
