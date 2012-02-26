@@ -5,7 +5,7 @@
 
     <groupId>com.daemitus</groupId>
     <artifactId>Deadbolt</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-Final</version>
     <packaging>jar</packaging>
 
     <name>Deadbolt</name>
@@ -18,7 +18,7 @@
     <repositories>
         <repository>
             <id>guardian-repo</id>
-            <url>http://guardian.mossycobble.com:8080/repo/content/groups/public/</url>
+            <url>http://guardian.mossycobble.com:8080/nexus/content/groups/public/</url>
         </repository>
         <repository>
             <id>acampadas-repo</id>
@@ -29,9 +29,14 @@
             <url>http://repo.bukkit.org/content/groups/public</url>
         </repository>
         <repository>
+  		<id>sk89q</id>
+			<url>http://mvn2.sk89q.com/repo/</url>
+        </repository>
+        <repository>
             <id>nexis-repo</id>
             <url>http://repo.nexisonline.net:8080/nexus/content/repositories/public</url>
         </repository>
+        
     </repositories>
     
     <build>
@@ -82,12 +87,17 @@
         <dependency>
             <groupId>ru.tehkode</groupId>
             <artifactId>PermissionsEx</artifactId>
-            <version>1.19</version>
+            <version>1.18</version>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>Vault</artifactId>
             <version>1.2.9</version>
+        </dependency>
+        <dependency>    
+            <groupId>com.sk89q</groupId>
+            <artifactId>worldguard</artifactId>
+            <version>5.4</version>
         </dependency>
     </dependencies>
 </project>
