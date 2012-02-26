@@ -5,6 +5,8 @@ import com.daemitus.deadbolt.Deadbolted;
 import com.daemitus.deadbolt.Perm;
 import com.daemitus.deadbolt.listener.ListenerManager;
 import com.daemitus.deadbolt.util.Util;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -19,16 +21,30 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
-public final class PlayerListener implements Listener {
+public final class PlayerListener extends JavaPlugin {
 
     private final Deadbolt plugin = Deadbolt.instance;
-
+    
+    private WorldGuardPlugin getWorldGuard()  {
+        Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
+     
+        // WorldGuard may not be loaded
+        if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
+            return null; // Maybe you want throw an exception instead
+        }
+     
+        return (WorldGuardPlugin) plugin;
+    }
+    
     public PlayerListener() {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.LOW)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)
                 && !handleLeftClick(event)) {
@@ -41,7 +57,7 @@ public final class PlayerListener implements Listener {
             event.setUseItemInHand(Result.DENY);
         }
     }
-
+    
     private boolean handleLeftClick(PlayerInteractEvent event) {
         switch (event.getClickedBlock().getType()) {
             case WOODEN_DOOR:
@@ -55,9 +71,13 @@ public final class PlayerListener implements Listener {
     }
 
     private boolean handleRightClick(PlayerInteractEvent event) {
-        if (event.getPlayer().getItemInHand().getType().equals(Material.SIGN) && !event.isCancelled()) {
+    	Player player = event.getPlayer();
+        Block against = event.getClickedBlock();
+        if (event.getPlayer().getItemInHand().getType().equals(Material.SIGN) && !event.isCancelled() && getWorldGuard().canBuild(player, against)){
             placeQuickSign(event);
+        
         }
+         
         switch (event.getClickedBlock().getType()) {
             case WOODEN_DOOR:
             case IRON_DOOR_BLOCK:
@@ -80,6 +100,7 @@ public final class PlayerListener implements Listener {
 
     }
 
+    
     private boolean placeQuickSign(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         Block against = event.getClickedBlock();
