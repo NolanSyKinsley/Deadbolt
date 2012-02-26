@@ -25,7 +25,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class PlayerListener extends JavaPlugin {
+public final class PlayerListener extends JavaPlugin implements listener {
 
     private final Deadbolt plugin = Deadbolt.instance;
     
@@ -44,7 +44,7 @@ public final class PlayerListener extends JavaPlugin {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)
                 && !handleLeftClick(event)) {
